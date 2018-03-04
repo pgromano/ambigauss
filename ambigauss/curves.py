@@ -32,8 +32,8 @@ def multigaussian(x, parameters):
     n_peaks = int(len(parameters) / 3)
 
     # Simple sanity check.
-    if (len(parameters) % 3) != 0:
-        raise Exception("Incorrect number of parameters.")
+    #if (len(parameters) % 3) != 0:
+        #raise Exception("Incorrect number of parameters.")
 
     for peak_i in range(n_peaks):
 
