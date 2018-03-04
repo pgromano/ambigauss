@@ -1,2 +1,2 @@
-from .fitter import fit
+from .fitter import fit, bayes_fit
 from .curves import gaussian, multigaussian
