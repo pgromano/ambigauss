@@ -11,6 +11,8 @@ def gaussian(X, height, center, width):
     ----------
     X : numpy.array
         X values for distribution
+    height : float
+        the amplitude of the distribution
     center : float
         the center of the distribution
     width : float
@@ -55,6 +57,44 @@ def objective(parameters, X, y):
 
 
 class GaussianSpectrum(BaseEstimator, RegressorMixin):
+    """Fit multiple Gaussian profiles to spectrum
+
+    Parameters
+    ----------
+    n_peaks : int
+        Number of peaks to estimate spectrum fit to data. If n_peaks=-1 then
+        the number of peaks is estimated by relative extrema
+        (scipy.signal.argrelextrema).
+    heights : array-like, (n_peaks,)
+        Initial guess for the peak amplitudes
+    centers : array-like, (n_peaks,)
+        Initial guess for the peak centers
+    widths : array-like, (n_peaks,)
+        Initial guess for the full width at half maximum
+    bounds : sequence, optional
+        Bounds for variables (only for L-BFGS-B, TNC and SLSQP). Passed as
+        (min, max) pairs for each element in x, defining the bounds on that
+        parameter. Use None for one of min or max when there is no bound in
+        that direction.
+    tol : float, optional
+        Tolerance for termination. For detailed control, use solver-specific
+        options.
+    method : str or callable, optional
+        Type of solver. See scipy.optimize.minimize
+
+    Attributes
+    ----------
+    heights : array-like, (n_peaks,)
+        Optmized height parameter
+    centers : array-like, (n_peaks,)
+        Optmized center parameter
+    widths : array-like, (n_peaks,)
+        Optmized width parameter
+
+    See Also
+    --------
+    scipy.signal.argrelextrema, scipy.optimize.minimize
+    """
     def __init__(self, n_peaks=1, heights=None, centers=None, widths=None,
                  bounds=None, tol=None, method=None):
         self.n_peaks = n_peaks
@@ -68,15 +108,15 @@ class GaussianSpectrum(BaseEstimator, RegressorMixin):
     def _init_params(self, X, y):
         # Initialize Gaussian centers
         if self.centers is None:
-            # Estimate peaks
+            # Estimate locations of peaks
             index = argrelextrema(np.diff(X), np.greater)[0]
             index = index[np.argsort(y[index])]
-#            index = find_peaks_cwt(y, widths=np.repeat(np.diff(X).mean(), 100))
+
             if self.n_peaks == -1:
                 # Define number of peaks
                 self.n_peaks = len(index)
             else:
-                # If n_peaks defined slice indices accordingly
+                # If n_peaks defined, slice indices accordingly
                 index = index[-self.n_peaks:]
             self.centers = X[index]
 
