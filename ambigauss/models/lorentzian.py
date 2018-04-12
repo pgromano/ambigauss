@@ -133,7 +133,7 @@ class LorentzianSpectrum(BaseEstimator, RegressorMixin):
 
     def fit(self, X, y):
         self._init_params(X, y)
-        results = minimize(objective, self._params, args=(X, y), bounds=self.bounds
+        results = minimize(objective, self._params, args=(X, y), bounds=self.bounds,
                            method=self.method, tol=self.tol)
         self._params = results.x
         self.heights, self.centers, self.widths = np.reshape(results.x, (self.n_peaks, 3)).T
