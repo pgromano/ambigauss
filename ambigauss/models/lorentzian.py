@@ -111,6 +111,12 @@ class LorentzianSpectrum(BaseEstimator, RegressorMixin):
             index = argrelextrema(np.diff(X), np.greater)[0]
             index = index[np.argsort(y[index])]
 
+            if len(index) == 0:
+                if self.n_peaks == -1:
+                    raise ValueError('Unable to estimate number of peaks')
+                else:
+                    index = np.random.choice(X.shape[0], size=self.n_peaks, replace=False)
+
             if self.n_peaks == -1:
                 # Define number of peaks
                 self.n_peaks = len(index)
