@@ -1,5 +1,5 @@
-from sklearn.base import BaseEstimator, RegressorMixin
 import numpy as np
+from sklearn.base import BaseEstimator, RegressorMixin
 from scipy.optimize import minimize
 from scipy.signal import argrelextrema
 
@@ -41,8 +41,8 @@ def multilorentzian(X, parameters):
     for peak_i in range(n_peaks):
 
         # Get parameters for peak i
-        center = parameters[peak_i, 0]
-        height = parameters[peak_i, 1]
+        height = parameters[peak_i, 0]
+        center = parameters[peak_i, 1]
         width = parameters[peak_i, 2]
 
         # Add peak to y
@@ -127,9 +127,9 @@ class LorentzianSpectrum(BaseEstimator, RegressorMixin):
         if self.widths is None:
             self.widths = np.ones(self.n_peaks)
 
-        self._params = np.concatenate([self.heights,
-                                       self.centers,
-                                       self.widths])
+        self._params = np.column_stack([self.heights,
+                                        self.centers,
+                                        self.widths]).ravel()
 
     def fit(self, X, y):
         self._init_params(X, y)
