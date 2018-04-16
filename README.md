@@ -5,7 +5,7 @@
 Basic example:
 
 ```python
-import ambigauss
+from ambigauss import gaussian, GaussianSpectrum
 
 # Simulate noisy 4-peak spectrum
 xdata = np.linspace(0, 10, 500)
@@ -17,15 +17,15 @@ ydata = gaussian(xdata, 1, 1, .5) + \
 
 
 # Call fit function.
-r = ambigauss.fit(xdata, ydata)
+model = GaussianSpectrum(n_peaks=4).fit(xdata, ydata)
 
 # Plot fitter results
 xmodel = np.linspace(0,10, 1000)
-ymodel = ambigauss.multigaussian(xmodel, r.params)
+ymodel = model.predict(xmodel)
 
 plt.plot(xdata, ydata , '.')
 plt.plot(xmodel, ymodel, '-')
-parameters.pretty_print()
+model.parameters
 ```
 ![](docs/example.png)
 ```
